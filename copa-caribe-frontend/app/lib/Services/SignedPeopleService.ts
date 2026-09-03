@@ -31,9 +31,8 @@ export const getSignedPeople = async (token: String) => {
     return Response.json({ error: "Error al obtener las personas inscritas" });
   }
 };
-
-export const getSignedPeopleQuery = async (token: String, query: any) => {
-  let qry = "?";
+export const fromJSONToQueryParams = (query:any) =>{
+ let qry = "?";
   let i = 0;
   for (let field in query) {
     if (i > 0) {
@@ -42,8 +41,13 @@ export const getSignedPeopleQuery = async (token: String, query: any) => {
     qry += field + "=" + query[field];
     ++i;
   }
+  return qry
+}
+
+export const getSignedPeopleQuery = async (token: String, query: any) => {
+
   try {
-    const result = await fetch(UrlAPI + "/signedQuery/" + qry, {
+    const result = await fetch(UrlAPI + "/signedQuery/" + fromJSONToQueryParams(query), {
       headers: { Authorization: "Bearer " + token },
       method: "GET",
     });

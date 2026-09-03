@@ -32,7 +32,7 @@ export default function NavBar() {
                   : "login-access absolute top-6 left-0 hidden"
               }
             >
-              <Link href={!islogged ? "/login" : "/cuenta"}>{!islogged ? "Login" : "Cuenta"}</Link>
+              <Link href={!islogged ? "/login" : "/cuenta"}>{!islogged ? <span className="icon-login ml-2"></span> : <span className="icon-account ml-2"></span> }</Link>
             </div>
             <div
               className={
@@ -42,7 +42,7 @@ export default function NavBar() {
               }
             >
               <Link href="/equipo">
-                {rol == "Admin" ? "Equipos" : "Mi equipo"}
+                {rol == "Admin" ? <span className="icon-team ml-[7px] mt-2"></span> : <span className="icon-team ml-[7px] mt-2"></span>}
               </Link>
             </div>
           </li>
@@ -55,7 +55,7 @@ export default function NavBar() {
           </li>
 
           <li>
-            <Link href="/"> Home</Link>
+            <Link href="/">Home</Link>
           </li>
           <li>
             {" "}
@@ -64,8 +64,8 @@ export default function NavBar() {
             </Link>{" "}
           </li>
 
-          <li>Tablas</li>
-          <li>Historico</li>
+          <li> <Link href="/torneos">Torneos</Link></li>
+          <li>Reglamento</li>
           <li>
             <Link href="/">
               <Image

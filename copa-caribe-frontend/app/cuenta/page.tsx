@@ -17,7 +17,6 @@ export default function Cuenta(){
     email: "",
     tel: "",
     team: [],
-    managers: [],
   });
   // variables for the modals
   const [isOpen, setOpen] = useState(false);
@@ -179,13 +178,14 @@ export default function Cuenta(){
           readOnly
           className="text-center mb-5 bg-gray-400 rounded-2xl"
           value={user.username}
+          type="text"
         />
         <label>Correo:</label>
         <input
           readOnly
+          type="email"
           className="text-center mb-5 bg-gray-400 rounded-2xl"
-          type="text"
-          value={user.email == "" || user.email! ? "No hay correo" : user.email}
+          value={user.email}
         />
 
         <label>Rol:</label>
@@ -207,21 +207,21 @@ export default function Cuenta(){
         <div className="flex flex-col justify-center items-center">
           <div className="flex">
             <button
-              className="bg-blue-500 focus:border-black rounded-2xl p-2 text-sm"
+              className="bg-blue-500 focus:border-black rounded-2xl p-2 text-sm hover:bg-blue-700"
               type="button"
               onClick={openModal}
             >
               Cambiar contraseña
             </button>
             <button
-              className="bg-blue-500 focus:border-black rounded-2xl p-2 text-sm ml-2"
+              className="bg-blue-500 focus:border-black rounded-2xl p-2 text-sm ml-2 hover:bg-blue-700"
               type="button"
               onClick={openModal2}
             >
               Cambiar correo
             </button>
             <button
-              className="bg-blue-500 focus:border-black rounded-2xl p-2 text-sm ml-2"
+              className="bg-blue-500 focus:border-black rounded-2xl p-2 text-sm ml-2 hover:bg-blue-700"
               type="button"
               onClick={openModal3}
             >
@@ -230,7 +230,7 @@ export default function Cuenta(){
           </div>
         </div>
         <button
-          className="bg-red-500 focus:border-black rounded-2xl p-2 text-sm ml-2 w-fit mt-3 icon-logout"
+          className="bg-red-500 focus:border-black rounded-2xl p-2 text-sm ml-2 w-fit mt-3 icon-logout hover:bg-red-700"
           type="button"
           onClick={openModal4}
         >
@@ -313,7 +313,7 @@ export default function Cuenta(){
           </div>
           <button
             onClick={changePass}
-            className="bg-blue-500 rounded-2xl w-fit p-2 mt-15"
+            className="bg-blue-500 rounded-2xl w-fit p-2 mt-15 hover:bg-blue-700"
           >
             Actualizar
           </button>
@@ -356,7 +356,7 @@ export default function Cuenta(){
           </div>
           <button
             onClick={changeEmail}
-            className="bg-blue-500 rounded-2xl w-fit p-2 mt-15"
+            className="bg-blue-500 rounded-2xl w-fit p-2 mt-15 hover:bg-blue-700"
           >
             Actualizar
           </button>
@@ -398,7 +398,7 @@ export default function Cuenta(){
           </div>
           <button
             onClick={changeTel}
-            className="bg-blue-500 rounded-2xl w-fit p-2 mt-15"
+            className="bg-blue-500 rounded-2xl w-fit p-2 mt-15 hover:bg-blue-700"
           >
             Actualizar
           </button>
@@ -409,8 +409,8 @@ export default function Cuenta(){
         <div className="flex flex-col justify-center items-center">
           ¿Seguro que quieres cerrar sesión?
           <div className="flex mt-5">
-            <div onClick={closeSession} className="icon-logout mr-10 text-sm flex flex-col">Salir</div>
-            <div onClick={closeModal4} className="icon-return text-sm flex flex-col">Atrás</div>
+            <div onClick={closeSession} className="icon-logout mr-10 text-sm flex flex-col cursor-pointer">Salir</div>
+            <div onClick={closeModal4} className="icon-return text-sm flex flex-col cursor-pointer">Atrás</div>
           </div>
         </div>
       </Modal>

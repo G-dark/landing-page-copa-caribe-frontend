@@ -17,7 +17,7 @@ export default function Paginator({
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  
+
   const currentItems = array.slice(startIndex, endIndex);
 
   const goAhead = () => {
@@ -34,7 +34,8 @@ export default function Paginator({
 
   return (
     <>
-      <div className="flex justify-center items-center w-full">
+    <div className="flex flex-col">
+       <div className="flex justify-center items-center w-full">
         <div onClick={goBack} className="icon-left-arrow mr-3"></div>
 
         {currentItems.map((item, index) => (
@@ -47,6 +48,7 @@ export default function Paginator({
       <div className="flex">
         {currentPage}/{totalPages}
       </div>
+    </div>
     </>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import { access } from "fs";
 import { useEffect, useState } from "react";
 
 export default function PaginatorCM({
@@ -9,6 +10,7 @@ export default function PaginatorCM({
   setRefresh,
   refresh,
   CardItem,
+  access
 }: {
   array: any[];
   labels: string[];
@@ -16,6 +18,7 @@ export default function PaginatorCM({
   tipo: string;
   setRefresh: (value: boolean) => void;
   refresh: boolean;
+  access: boolean;
 
   CardItem: React.ComponentType<{
     values: string[];
@@ -24,6 +27,7 @@ export default function PaginatorCM({
     tipo: string;
     setRefresh: (value: boolean) => void;
     refresh: boolean;
+    access:boolean;
   }>;
 }) {
   const itemsPerPage = array.length > 5 ? 5 : array.length;
@@ -67,6 +71,7 @@ export default function PaginatorCM({
             setRefresh={setRefresh}
             refresh={refresh}
             tipo={tipo}
+            access={access}
           />
         ))}
         <div onClick={goAhead} className="icon-right-arrow"></div>

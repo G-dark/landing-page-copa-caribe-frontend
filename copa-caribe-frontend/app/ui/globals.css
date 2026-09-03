@@ -18,6 +18,11 @@
     --foreground: black;
   }
 }
+@page {
+  size: A4;
+  margin: 0;
+}
+
 
 body {
   background: var(--background);
@@ -51,15 +56,71 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-arrow-down2:before{
+  content: "\e90e";
+  font-size: 25px;
+  color: black;
+}
+.icon-arrow-up:before{
+  content: "\e90d";
+  font-size: 19px;
+  color: green;
+}
+.icon-arrow-down:before{
+  content: "\e90e";
+  font-size: 19px;
+  color: red;
+}
+.icon-account:before{
+  content: "\e910";
+  font-size: 19px;
+  color: black;
+}
+.icon-team:before{
+  content: "\e911";
+  font-size: 19px;
+  color: black;
+}
+.icon-login:before{
+  content: "\e912";
+  font-size: 19px;
+  color: black;
+}
+.icon-search:before{
+  content: "\e90f";
+  font-size: 19px;
+  color: black;
+}
 .icon-pencil:before{
   content: "\e909";
   font-size: 21px;
+  color: white;
+}
+.icon-pencil2:before{
+  content: "\e909";
+  font-size: 21px;
+  color: black;
+}
+
+.icon-pencil3:before{
+  content: "\e909";
+  font-size: 11px;
   color: black;
 }
 .icon-trash:before{
   content: "\e90a";
   font-size: 25px;
-  color: red;
+  color: white;
+}
+.icon-trash2:before{
+  content: "\e90a";
+  font-size: 25px;
+  color: black;
+}
+.icon-trash3:before{
+  content: "\e90a";
+  font-size: 15px;
+  color: black;
 }
 .icon-right-arrow:before {
   content: "\e906";

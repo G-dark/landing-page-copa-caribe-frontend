@@ -4,8 +4,10 @@ import NavBar from "../ui/NavBar";
 import CountrySelector from "../ui/CountrySelector";
 import { useHome } from "../lib/Contexts/HomeContexts";
 import { createTeam } from "../lib/Services/TeamService";
+import { useRouter } from "next/navigation";
 export default function crearEquipo() {
   const { year } = useHome();
+  const router = useRouter();
   const [teamName, setTeamName] = useState("");
   const [teamNameError, setTeamNameError] = useState("");
   const [edition, setEdition] = useState(year.toString());
@@ -18,62 +20,66 @@ export default function crearEquipo() {
   const [response2, setResponse2] = useState("");
 
   const registerTeam = async () => {
-      if (validateTeamForm()) {
-        const formData = new FormData();
-        formData.append("name", teamName);
-        formData.append("edition", edition);
-        formData.append("country", country);
-        formData.append("founded", founded);
-        formData.append("category", String(category));
-        if (logo.name !== "") {
-          formData.append("flag", logo);
-        }
-        const user = JSON.parse(localStorage.getItem("user")!);
-        const res = await createTeam(
-          formData,
-          localStorage.getItem("token")!,
-          user.username,
-        );
-        const data = await res.json();
+    if (validateTeamForm()) {
+      const formData = new FormData();
+      formData.append("name", teamName);
+      formData.append("edition", edition);
+      formData.append("country", country);
+      formData.append("founded", founded);
+      formData.append("category", String(category));
+      if (logo.name !== "") {
+        formData.append("flag", logo);
+      }
+      const user = JSON.parse(localStorage.getItem("user")!);
+      const res = await createTeam(
+        formData,
+        localStorage.getItem("token")!,
+        user.username,
+      );
+      const data = await res.json();
 
-        if ("success" in data) {
-          setResponse2("Equipo creado");
-        } else {
-          setResponse2("Error creando el equipo");
+      if ("success" in data) {
+        setResponse2("Equipo creado");
+      } else {
+        if (res.status == 401) {
+          router.push("/login?refreshToken=" + true);
         }
-      } else {
-        setResponse2("Revise los datos indicados");
-      }
-    };
-    const validateTeamForm = () => {
-      let validate = false,
-        validate2 = false,
-        validate3 = false;
 
-      if (teamName == "") {
-        validate = false;
-        setTeamNameError("Debes nombrar el equipo");
-      } else {
-        validate = true;
-        setTeamNameError("");
+        setResponse2("Error creando el equipo");
       }
-      if (founded == "") {
-        validate2 = false;
-        setFoundedError("Debes ingresar una fecha de fundacion");
-      } else {
-        validate2 = true;
-        setFoundedError("");
-      }
-      if (country == "") {
-        validate3 = false;
-        setCountryError("Debes Seleccionar un país");
-      } else {
-        validate3 = true;
-        setCountryError("");
-      }
-      return validate && validate2 && validate3;
-    };
-   const handleEditionChange = (e: any) => {
+    } else {
+      setResponse2("Revise los datos indicados");
+    }
+  };
+  const validateTeamForm = () => {
+    let validate = false,
+      validate2 = false,
+      validate3 = false;
+
+    if (teamName == "") {
+      validate = false;
+      setTeamNameError("Debes nombrar el equipo");
+    } else {
+      validate = true;
+      setTeamNameError("");
+    }
+    if (founded == "") {
+      validate2 = false;
+      setFoundedError("Debes ingresar una fecha de fundacion");
+    } else {
+      validate2 = true;
+      setFoundedError("");
+    }
+    if (country == "") {
+      validate3 = false;
+      setCountryError("Debes Seleccionar un país");
+    } else {
+      validate3 = true;
+      setCountryError("");
+    }
+    return validate && validate2 && validate3;
+  };
+  const handleEditionChange = (e: any) => {
     if (e.target.value == "1") {
       setEdition(year.toString());
     }
@@ -111,6 +117,7 @@ export default function crearEquipo() {
               <label className="text-white text-sm">País</label>
               <CountrySelector
                 value={country}
+                readOnly={false}
                 setValue={setCountry}
               ></CountrySelector>
               <p className="text-xs text-red-400 mt-1">{countryError}</p>
