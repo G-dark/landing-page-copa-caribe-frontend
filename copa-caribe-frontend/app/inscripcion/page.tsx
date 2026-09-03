@@ -17,7 +17,6 @@ import { useHome } from "../lib/Contexts/HomeContexts";
 import Card from "../ui/Card";
 import CountrySelector from "../ui/CountrySelector";
 import { createTeam } from "../lib/Services/TeamService";
-import Paginator from "../ui/Paginator";
 
 export default function inscripcion() {
   const { islogged, rol, device, year } = useHome();
@@ -47,6 +46,7 @@ export default function inscripcion() {
   const [countryError, setCountryError] = useState("");
   const [founded, setFounded] = useState("");
   const [foundedError, setFoundedError] = useState("");
+  const [cargo, setCargo] = useState("");
   const [category, setCategory] = useState(year);
   const [logo, setLogo] = useState(new File([], ""));
   const [days, setDays] = useState("15");
@@ -90,7 +90,7 @@ export default function inscripcion() {
     fetchData();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, [days, days2, days3, days4]);
 
@@ -107,10 +107,11 @@ export default function inscripcion() {
         teamName: team.trim(),
         oneCat: categoryOne,
         multiplesCat: categoryMultiple,
+        cargo
       };
       const created = await createSignedPeople(body);
       const data = await created.json();
-      console.log(data);
+
       if ("success" in data) {
         // await sendEmail(name, email, "Touch");
         setResponse("Tus datos han sido registrados");
@@ -312,6 +313,7 @@ export default function inscripcion() {
                 <div>
                   <label className="text-white text-sm">Nombres</label>
                   <input
+                  placeholder="Raul Gonzalo"
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
                     onChange={(e) => setName(e.target.value)}
@@ -324,6 +326,7 @@ export default function inscripcion() {
                 <div>
                   <label className="text-white text-sm">Apellidos</label>
                   <input
+                  placeholder="Rodriguez Pacheco"
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
@@ -336,6 +339,7 @@ export default function inscripcion() {
                 <div>
                   <label className="text-white text-sm">Identificación</label>
                   <input
+                  placeholder="1003456479"
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
                     onChange={(e) => setId(e.target.value)}
@@ -352,12 +356,13 @@ export default function inscripcion() {
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
+                    placeholder="example@example.com"
                   />
                   <p className="text-xs text-red-400 mt-1">{errorEmail}</p>
                 </div>
 
                 {/* Equipo */}
-                <div className="md:col-span-2">
+                <div className="md:col-span-1">
                   <label className="text-white text-sm">
                     Nombre del equipo
                   </label>
@@ -366,6 +371,17 @@ export default function inscripcion() {
                     type="text"
                     onChange={(e) => setTeam(e.target.value)}
                     value={team}
+                  />
+                </div>
+
+                 <div className="md:col-span-1">
+                  <label className="text-white text-sm">Cargo</label>
+                  <input
+                  placeholder="Presidente"
+                    className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    type="text"
+                    onChange={(e) => setCargo(e.target.value)}
+                    value={cargo}
                   />
                 </div>
 
@@ -595,6 +611,7 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
+                      "Cargo"
                     ]}
                     values={[
                       s.name,
@@ -605,6 +622,7 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
+                      s.cargo
                     ]}
                     action="Contactar"
                   />
@@ -644,6 +662,7 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
+                      "Cargo"
                     ]}
                     values={[
                       s.name,
@@ -654,6 +673,7 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
+                      s.cargo
                     ]}
                     action="Pasar a pago"
                   />
@@ -694,6 +714,7 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
+                      "Cargo"
                     ]}
                     values={[
                       s.name,
@@ -704,6 +725,7 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
+                      s.cargo
                     ]}
                     action="Aceptar"
                   />
@@ -741,6 +763,7 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
+                      "Cargo"
                     ]}
                     values={[
                       s.name,
@@ -751,6 +774,7 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
+                      s.cargo
                     ]}
                     action=""
                   />
@@ -782,6 +806,7 @@ export default function inscripcion() {
               <div>
                 <label className="text-white text-sm">País</label>
                 <CountrySelector
+                  readOnly={false}
                   value={country}
                   setValue={setCountry}
                 ></CountrySelector>

@@ -13,6 +13,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-phone-input-2": "^2.15.1",
+    "react-to-print": "^3.3.0",
     "rendered-country-flags": "^1.2.1"
   },
   "devDependencies": {

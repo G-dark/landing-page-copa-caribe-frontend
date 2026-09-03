@@ -30,6 +30,7 @@ export default function Card({
         oneCat: values[5] == "Sí" ? true : false,
         multiplesCat: values[6] == "Sí" ? true : false,
         teamName: values[7],
+        cargo: values[8],
         fase: "Contactado",
       };
       const response2 = await updateSignedPeople(
@@ -40,7 +41,6 @@ export default function Card({
       const data2 = await response2.json();
 
       if ("success" in data && "success" in data2) {
-        //"success" in data
 
         setResponse("Se ha hecho contacto por correo");
       } else {
@@ -61,6 +61,7 @@ export default function Card({
         oneCat: values[5] == "Sí" ? true : false,
         multiplesCat: values[6] == "Sí" ? true : false,
         teamName: values[7],
+        cargo: values[8],
         fase: "Pendiente a pago",
       };
       const response2 = await updateSignedPeople(
@@ -98,6 +99,7 @@ export default function Card({
         oneCat: values[5] == "Sí" ? true : false,
         multiplesCat: values[6] == "Sí" ? true : false,
         teamName: values[7],
+        cargo: values[8],
         fase: "Aceptado",
       };
       const response2 = await updateSignedPeople(

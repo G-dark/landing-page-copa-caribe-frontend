@@ -16,6 +16,22 @@ export const loginUser = async (username: string, password: string) => {
   }
 };
 
+export const refreshSession = async (username: string, password: string) => {
+  try {
+    const result = await fetch(UrlAPI + "/user/refreshToken", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+      method: "POST",
+    });
+
+    return result;
+  } catch (error) {
+    return Response.json({ error: "Error al iniciar sesión" });
+  }
+};
+
 export const getUser = async (username: string, token: string) => {
   try {
     const user = await fetch(UrlAPI + "/user/" + username, {

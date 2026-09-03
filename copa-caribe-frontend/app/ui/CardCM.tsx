@@ -6,9 +6,7 @@ import { useRouter } from "next/navigation";
 import default_profile from "../../public/default_profile.png";
 import {
   deleteCoach,
-  deleteManager,
   updateCoach,
-  updateManager,
 } from "../lib/Services/TeamService";
 
 export default function CardCM({
@@ -18,6 +16,7 @@ export default function CardCM({
   tipo,
   setRefresh,
   refresh,
+  access,
 }: {
   values: string[];
   labels: string[];
@@ -25,6 +24,7 @@ export default function CardCM({
   tipo: string;
   setRefresh: (value: boolean) => void;
   refresh: boolean;
+  access: boolean;
 }) {
   const router = useRouter();
   const [isOpen, setOpen] = useState(false);
@@ -98,29 +98,7 @@ export default function CardCM({
         setResponse("Error: revise los datos ingresados");
       }
     }
-    if (tipo == "Manager") {
-      if (validate()) {
-        const formData = new FormData();
-        formData.append("name", value2.trim());
-        formData.append("image", image);
 
-        const response = await updateManager(
-          id,
-          localStorage.getItem("token")!,
-          formData,
-          values[2],
-        );
-        const data = await response.json();
-        if ("success" in data) {
-          setRefresh(!refresh);
-          closeModal();
-        } else {
-          setResponse("Error al actualizar el manager");
-        }
-      } else {
-        setResponse("Error: revise los datos ingresados");
-      }
-    }
   };
   const deleteValues = async () => {
     if (tipo == "Entrenador") {
@@ -138,22 +116,6 @@ export default function CardCM({
       }
     }
 
-    if (tipo == "Manager") {
-      const user = JSON.parse(localStorage.getItem("user")!);
-      const response = await deleteManager(
-        id,
-        localStorage.getItem("token")!,
-        values[2],
-        user.username,
-      );
-      const data = await response.json();
-      if ("success" in data) {
-        setRefresh(!refresh);
-        closeModal2();
-      } else {
-        setResponse2("Error al eliminar el manager");
-      }
-    }
   };
   return (
     <>
@@ -161,8 +123,8 @@ export default function CardCM({
       onClick={goToPlayerPage}
         className={
           tipo == "Player"
-            ? "flex flex-col justify-center items-center bg-blue-800 w-[200px] h-[280px] p-5 rounded-2xl mr-5 cursor-pointer"
-            : "flex flex-col justify-center items-center bg-blue-800 w-[200px] h-[280px] p-5 rounded-2xl mr-5"
+            ? "flex flex-col flex-wrap justify-center items-center bg-blue-800 w-[200px] h-[280px] p-5 rounded-2xl mr-5 ml-5 cursor-pointer"
+            : "flex flex-col flex-wrap justify-center items-center bg-blue-800 w-[200px] h-[280px] p-5 rounded-2xl mr-5 ml-5"
         }
       >
         {values.map((value, index) => {
@@ -171,7 +133,7 @@ export default function CardCM({
               {labels[index] == "Image" ? (
                 <Image
                   className="rounded-full"
-                  src={value !== " " && value !== undefined ? value.trimStart() : default_profile}
+                  src={value || default_profile}
                   alt="Coach"
                   width={100}
                   height={100}
@@ -182,7 +144,7 @@ export default function CardCM({
             </div>
           );
         })}
-        {tipo == "Player" ? (
+        {tipo == "Player" || !access ? (
           ""
         ) : (
           <div className="flex gap-3 mt-3">
@@ -205,7 +167,7 @@ export default function CardCM({
                 {labels[key] == "Image" ? (
                   <div className="rounded-2xl ml-30">
                     <Image
-                      src={value !== " " && value !== undefined ? value.trimStart() : default_profile}
+                      src={value || default_profile}
                       alt="Coach"
                       width={100}
                       height={100}

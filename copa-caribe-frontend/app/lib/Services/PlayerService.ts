@@ -1,4 +1,4 @@
-import { UrlAPI } from "./SignedPeopleService";
+import { UrlAPI, fromJSONToQueryParams } from "./SignedPeopleService";
 
 export const getPlayerByID = async (id: string, token:string) => {
   try {
@@ -11,17 +11,8 @@ export const getPlayerByID = async (id: string, token:string) => {
   }
 };
 export const getPlayerQuery = async (token: String, query: any) => {
-  let qry = "?";
-  let i = 0;
-  for (let field in query) {
-    if (i > 0) {
-      qry += "&";
-    }
-    qry += field + "=" + query[field];
-    ++i;
-  }
   try {
-    const result = await fetch(UrlAPI + "/players/" + qry, {
+    const result = await fetch(UrlAPI + "/players/" + fromJSONToQueryParams(query), {
       headers: { Authorization: "Bearer " + token },
       method: "GET",
     });
@@ -68,6 +59,20 @@ export const updatePlayer = async (
 
     return updated;
   } catch (error) {
-    return Response.json({ error: "Error al actualizar el equipo" });
+    return Response.json({ error: "Error al actualizar el jugador" });
+  }
+};
+
+export const deletePlayer = async (id: string, edition: string, token: string) => {
+  try {
+    const deleted = await fetch(UrlAPI + "/player/delete/" + id + "/" + edition, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      method: "DELETE",
+    });
+    return deleted;
+  } catch (error) {
+    return Response.json({ error: "Error al eliminar el jugador" });
   }
 };

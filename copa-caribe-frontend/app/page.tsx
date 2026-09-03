@@ -3,23 +3,52 @@
 import { useEffect, useState } from "react";
 import NavBar from "./ui/NavBar";
 import Image from "next/image";
-import trophy from "../public/trofeo.png";
-import ball from "../public/ball.png";
 import barranquilla from "../public/Barranquilla.jpg";
 import futbol from "../public/inicio_foto.jpg";
-import diagonal_shapes from "../public/geometrical_pattern.png";
 import { useHome } from "./lib/Contexts/HomeContexts";
 import Popup from "./ui/Popup";
 
+import img1 from "../public/fondo_inscripcion_CC.jpg";
+import img2 from "../public/inicio_foto.jpg";
+import img3 from "../public/copa carribe imag.jpg";
+import Paginator from "./ui/Paginator";
+import CardI from "./ui/CardI";
+import Paginator3 from "./ui/Paginator3";
+import Modal3 from "./ui/Modal3";
+
 export default function Home() {
   // declaraciones e inicializaciones
-  const { year, show, setShow, rol, setRol } = useHome();
+  const { year, show, setShow, setRol } = useHome();
   const [isOpenPopup, setOpenUp] = useState(false);
+  const [isOpenModal, setOpenModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [images, setImges] = useState([
+    { id: 1, image: img1 },
+    { id: 2, image: img2 },
+    { id: 3, image: img3 },
+  ]);
+  const [image, setImage] = useState(img1);
+
+  const [message1, setMessage1] = useState(0);
 
   const openPopup = () => setOpenUp(true);
   const closePopup = () => setOpenUp(false);
+  const openModal = () => setOpenModal(true);
+  const closeModal = () => setOpenModal(false);
   useEffect(() => {
+    if (!localStorage.getItem("user")) {
+      const user = {
+        username: "",
+        password: "",
+        rol: "User",
+        email: "",
+        tel: "",
+        team: [],
+      };
+      const userStr = JSON.stringify(user);
+      setRol("User");
+      localStorage.setItem("user", userStr);
+    }
     const message = localStorage.getItem("message");
     if (message !== null && !show) {
       setMessage(message);
@@ -28,6 +57,13 @@ export default function Home() {
       openPopup();
     }
   }, []);
+
+  useEffect(() => {
+    if (message1 !== 0) {
+      setImage(images.find((img) => img.id === message1)?.image || img1);
+      openModal();
+    }
+  }, [message1]);
   return (
     <>
       <NavBar />
@@ -38,7 +74,7 @@ export default function Home() {
           width={200}
           alt="Dos jovenes jugando futbol"
         ></Image>
-       <div className="absolute inset-0 bg-gradient-to-l from-blue-900/80 via-blue-800/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-l from-blue-900/80 via-blue-800/60 to-transparent"></div>
 
         {/* Forma diagonal */}
         <div className="absolute inset-0 bg-blue-900/50 clip-diagonal"></div>
@@ -48,7 +84,7 @@ export default function Home() {
             <h1 className="text-9xl flex ml-5">
               {" "}
               <span className="text-white">Copa</span>{" "}
-              <span className="text-white">Caribe </span>
+              <span className="text-white pl-4">Caribe </span>
             </h1>
             <div className="text-5xl text-red-500">{year}</div>
           </div>
@@ -61,8 +97,8 @@ export default function Home() {
             La REGIÓN CARIBE se convertirá en la referencia mundial de futbol
             formativo, celebrando la mayor fiesta del deporte base
             internacional. Copa caribe es un emocionante torneo Infantil anual
-            que reúne a niños de todo el país para celebrar el fútbol en
-            su forma más pura: con alegría, pasión y compañerismo. Un evento
+            que reúne a niños de todo el país para celebrar el fútbol en su
+            forma más pura: con alegría, pasión y compañerismo. Un evento
             diseñado para formar deportistas y personas con valores.
           </p>
         </div>
@@ -124,11 +160,29 @@ export default function Home() {
         </div>
         <div className="font-bold">Redes sociales</div>
         <div className="flex justify-center">
-          <div className="instagram icon-instagram m-10"></div>
-          <div className="instagram icon-facebook m-10"></div>
-          <div className="instagram icon-whatsapp m-10"></div>
+          <a href="" target="_blank" rel="noopener noreferrer">
+            <div className="instagram icon-instagram m-10 cursor-pointer"></div>
+          </a>
+          <a
+            href="https://www.facebook.com/profile.php?id=100068913353730&locale=es_LA"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className="instagram icon-facebook m-10 cursor-pointer"></div>
+          </a>
+
+          <a href="" target="_blank" rel="noopener noreferrer">
+            <div className="instagram icon-whatsapp m-10 cursor-pointer"></div>
+          </a>
         </div>
         <div className="font-bold">Galeria</div>
+        <div className="flex justify-center">
+          <Paginator3
+            array={images}
+            CardItem={CardI}
+            setMessage1={setMessage1}
+          ></Paginator3>
+        </div>
         <div className="font-bold">Como llegar</div>
         <div className="flex justify-center">
           <iframe
@@ -151,6 +205,9 @@ export default function Home() {
       <Popup onClose={closePopup} isOpen={isOpenPopup}>
         {message}
       </Popup>
+      <Modal3 onClose={closeModal} isOpen={isOpenModal}>
+        <Image src={image} alt="Imagen del modal" width={500} height={300} />
+      </Modal3>
     </>
   );
 }

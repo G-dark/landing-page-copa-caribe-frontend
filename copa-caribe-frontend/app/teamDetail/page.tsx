@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import NavBar from "../ui/NavBar";
 import { useSearchParams } from "next/navigation";
-import {
-  addCoach,
-  addManager,
-  getTeamByID,
-  updateTeam,
-} from "../lib/Services/TeamService";
+import { addCoach, getTeamByID, updateTeam } from "../lib/Services/TeamService";
 import { useHome } from "../lib/Contexts/HomeContexts";
 import CountrySelector from "../ui/CountrySelector";
 import Image from "next/image";
@@ -30,6 +25,9 @@ export default function TeamDetail() {
   const { year } = useHome();
   // local variables and states
   const [team, setTeam] = useState<any>({});
+  const [user, setUser] = useState<any>(
+    JSON.parse(localStorage.getItem("user")!),
+  );
   const [teamName, setTeamName] = useState("");
   const [teamNameError, setTeamNameError] = useState("");
   const [edition, setEdition] = useState("");
@@ -63,6 +61,7 @@ export default function TeamDetail() {
   const [age, setAge] = useState("");
   const [birthYear, setBirthYear] = useState("");
   const [birthYearError, setBirthYearError] = useState("");
+  const [talla, setTalla] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const openModal = () => setOpen(true);
@@ -70,6 +69,7 @@ export default function TeamDetail() {
   const [isOpen3, setOpen3] = useState(false);
   const openModal3 = () => setOpen3(true);
   const closeModal3 = () => setOpen3(false);
+  const [loading, setLoading] = useState(true);
 
   // useEffect for fetch team data and refresh when updates are made
   useEffect(() => {
@@ -82,7 +82,6 @@ export default function TeamDetail() {
     const response = await getTeamByID(teamId!);
     const data = await response.json();
 
-    console.log(data);
     setTeamName(data[0].name);
     setEdition(data[0].edition);
     setCountry(data[0].country);
@@ -107,6 +106,7 @@ export default function TeamDetail() {
     }
 
     setTeam(data[0]);
+    setLoading(false);
   };
   const addTheCoach = async () => {
     if (validateCoachForm()) {
@@ -156,6 +156,7 @@ export default function TeamDetail() {
       formData.append("position", position);
       formData.append("birthYear", birthYear);
       formData.append("nation", country2);
+      formData.append("talla", talla.trim());
       if (image4.name !== "") {
         formData.append("image", image4);
       }
@@ -299,7 +300,6 @@ export default function TeamDetail() {
     return validate && validate2;
   };
 
-
   const validatePlayerForm = async () => {
     let validate = false,
       validate2 = false,
@@ -371,7 +371,7 @@ export default function TeamDetail() {
     }
     const query = {
       dorsal: dorsal,
-      team: teamId
+      team: teamId,
     };
     const response = await getPlayerQuery(
       localStorage.getItem("token")!,
@@ -401,12 +401,15 @@ export default function TeamDetail() {
 
   const handleEditionChange = (e: any) => {
     if (e.target.value == "1") {
-      setEdition(year.toString());
+      setEdition(edition);
     }
     if (e.target.value == "2") {
-      setEdition((Number(year) + 1).toString());
+      setEdition(year.toString());
     }
     if (e.target.value == "3") {
+      setEdition((Number(year) + 1).toString());
+    }
+    if (e.target.value == "4") {
       setEdition((Number(year) + 2).toString());
     }
   };
@@ -416,324 +419,449 @@ export default function TeamDetail() {
     setImage(URL.createObjectURL(file));
     setLogo(file);
   };
-  return (
-    <>
-      <NavBar />
-
-      <div className="flex flex-col justify-center items-center mt-10 ml-30 min-h-screen">
-        <div className="flex flex-col justify-center items-center bg-white p-5 rounded-2xl">
-          <input
-            className="w-1/2 ml-2 mb-3 mt-2 p-2 bg-gray-200 rounded text-center"
-            type="text"
-            onChange={(e) => setTeamName(e.target.value)}
-            value={teamName}
-          />
-          <p className="text-xs text-red-400 mt-1">{teamNameError}</p>
-          <Image
-            className="mb-5 rounded-full border-2 border-black"
-            src={image !== "" ? image : default_escudo}
-            alt="Escudo de equipo de futbol"
-            width={100}
-            height={100}
-          ></Image>
-          <div>
-            <input
-              className="w-full mt-1 p-2 bg-gray-200 rounded"
-              type="file"
-              onChange={handleImageChange}
-            />
-          </div>
-        </div>
-
-        <div className="p-5 bg-white w-full max-w-3xl rounded-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-black text-sm">País</label>
-              <CountrySelector
-                value={country}
-                setValue={setCountry}
-              ></CountrySelector>
-              <p className="text-xs text-red-400 mt-1">{countryError}</p>
-            </div>
-
-            <div>
-              <label className="text-black text-sm">Edicion</label>
-
-              <select
-                onChange={handleEditionChange}
-                className="w-full mt-1 p-2 bg-gray-200 rounded"
-              >
-                <option value="1">{year}</option>
-                <option value="2">{Number(year + 1)}</option>
-                <option value="3">{Number(year + 2)}</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-black text-sm">Fundación</label>
-              <input
-                className="w-full mt-1 p-2 bg-gray-200 rounded"
-                type="date"
-                onChange={(e) => setFounded(e.target.value)}
-                value={founded}
-              />
-              <p className="text-xs text-red-400 mt-1">{foundedError}</p>
-            </div>
-
-            <div>
-              <label className="text-black text-sm">Categoria</label>
-              <input
-                className="w-full mt-1 p-2 bg-gray-200 rounded"
-                type="number"
-                onChange={(e) => setCategory(Number(e.target.value))}
-                value={category}
-              />
-            </div>
-          </div>
-
-          <div
-            className={`text-sm ${
-              response.includes("Error") ? "text-red-400" : "text-blue-300"
-            }`}
-          >
-            {response}
-          </div>
-        </div>
-        <button
-          onClick={updateTeamF}
-          className="w-1/2 mb-7 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
-        >
-          Actualizar Equipo
-        </button>
-        <h1 className="font-bold text-lg">Entrenadores</h1>
-        <div className="flex mt-10 mb-10">
-          {coachs.length > 0 ? (
-            <PaginatorCM
-              array={coachs}
-              tipo={"Entrenador"}
-              id={teamId!}
-              labels={["Image", "Nombre", "ID"]}
-              CardItem={CardCM}
-              setRefresh={setRefresh}
-              refresh={refresh}
-            />
-          ) : (
-            "No hay coaches agregados aún"
-          )}
-        </div>
-
-        <div
-          className="flex text-sm text-blue-500 cursor-pointer  items-center"
-          onClick={openModal}
-        >
-          <div className="text-5xl font-bold text-blue-500 mr-2 ">+</div>{" "}
-          Agregar Entrenador
-        </div>
-
-
-
-        <h1 className="font-bold text-lg mt-10">Jugadores</h1>
-        <div className="flex mt-10 mb-10">
-          {players.length > 0 ? (
-            <PaginatorCM
-              array={players}
-              tipo={"Player"}
-              id={teamId!}
-              labels={["Image", "Nombre", "ID"]}
-              CardItem={CardCM}
-              setRefresh={setRefresh}
-              refresh={refresh}
-            />
-          ) : (
-            "No hay jugadores agregados aún"
-          )}
-        </div>
-        <div
-          className="flex text-sm text-blue-500 cursor-pointer  items-center"
-          onClick={openModal3}
-        >
-          <div className="text-5xl font-bold text-blue-500 mr-2 ">+</div>{" "}
-          Agregar Jugador
-        </div>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-16 h-16 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
       </div>
-      {/* Primer modal para agregar entrenador */}
-      <Modal isOpen={isOpen} onClose={closeModal}>
-        <div className="flex">
-          <div className="grid grid-cols-1 gap-4">
-            <div className="ml-40">Agregar Entrenador</div>
-            <div className="flex">
-              <label className="text-black text-sm mr-2">Nombre completo</label>
-              <input
-                value={name}
-                onChange={(e) => {
-                  return setName(e.target.value);
-                }}
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="text"
-              />
-            </div>
-            <p className="text-xs text-red-400 mt-1 ml-32">{nameError}</p>
-            <div className="flex">
-              <label className="text-black text-sm mr-9">Identificación</label>
-              <input
-                value={id}
-                onChange={(e) => {
-                  return setId(e.target.value);
-                }}
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="text"
-              />
-            </div>
-            <p className="text-xs text-red-400 mt-1 ml-32">{idError}</p>
-            <div className="flex">
-              <label className="text-black text-sm mr-17">Imagen</label>
-              <input
-                className="w-1/2 mt-1 p-1 bg-gray-200 rounded"
-                type="file"
-                onChange={(e) => setImage2(e.target.files![0])}
-              />
-            </div>
-            <div
-              className={`mt-2 ml-32 text-sm ${
-                response2.includes("Error") ? "text-red-400" : "text-blue-300"
-              }`}
-            >
-              {response2}
-            </div>
-            <button
-              onClick={addTheCoach}
-              className="w-1/2 mt-1 ml-30 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
-            >
-              Agregar
-            </button>
-          </div>
-        </div>
-      </Modal>
+    );
+  } else {
+    return (
+      <>
+        <NavBar />
 
+        <div className="flex flex-col justify-center items-center mt-10 ml-30 min-h-screen">
+          {(user.team?.includes(teamId!) || user.rol == "Admin") && (
+            <>
+              <div className="flex flex-col justify-center items-center bg-white p-5 rounded-2xl">
+                <input
+                  className="w-1/2 ml-2 mb-3 mt-2 p-2 bg-gray-200 rounded text-center"
+                  type="text"
+                  onChange={(e) => setTeamName(e.target.value)}
+                  value={teamName}
+                />
+                <p className="text-xs text-red-400 mt-1">{teamNameError}</p>
+                <Image
+                  className="mb-5 rounded-full border-2 border-black"
+                  src={image !== null ? image : default_escudo}
+                  alt="Escudo de equipo de futbol"
+                  width={100}
+                  height={100}
+                ></Image>
+                <div>
+                  <input
+                    className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    type="file"
+                    onChange={handleImageChange}
+                  />
+                </div>
+              </div>
 
+              <div className="p-5 bg-white w-full max-w-3xl rounded-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-black text-sm">País</label>
+                    <CountrySelector
+                      readOnly={false}
+                      value={country}
+                      setValue={setCountry}
+                    ></CountrySelector>
+                    <p className="text-xs text-red-400 mt-1">{countryError}</p>
+                  </div>
 
-      {/* 2do modal para agregar player */}
+                  <div>
+                    <label className="text-black text-sm">Edicion</label>
 
-      <Modal isOpen={isOpen3} onClose={closeModal3}>
-        <div className="flex flex-col">
-          <div className="ml-40">Agregar jugador</div>
-          <div className="grid grid-cols-1 gap-4">
+                    <select
+                      onChange={handleEditionChange}
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    >
+                      <option value="1">{edition}</option>
+                      <option value="2">{year}</option>
+                      <option value="3">{Number(year + 1)}</option>
+                      <option value="4">{Number(year + 2)}</option>
+                    </select>
+                  </div>
 
-            <div className="flex">
-              <label className="text-black text-sm mr-2">Nombre completo</label>
-              <input
-                value={name3}
-                onChange={(e) => {
-                  return setName3(e.target.value);
-                }}
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="text"
-              />
-            </div>
-            <p className="text-xs text-red-400 mt-1 ml-32">{nameError3}</p>
-            <div className="flex">
-              <label className="text-black text-sm mr-9">Identificación</label>
-              <input
-                value={id3}
-                onChange={(e) => {
-                  return setId3(e.target.value);
-                }}
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="text"
-              />
-            </div>
-            <p className="text-xs text-red-400 mt-1 ml-32">{idError3}</p>
-            <div className="flex">
-              <label className="text-black text-sm mr-17">Imagen</label>
-              <input
-                className="w-1/2 mt-1 p-1 bg-gray-200 rounded"
-                type="file"
-                onChange={(e) => setImage4(e.target.files![0])}
-              />
-            </div>
-            <div className="flex">
-              <label className="text-black text-sm mr-19">Dorsal</label>
-              <input
-                value={dorsal}
-                onChange={(e) => {
-                  return setDorsal(Number(e.target.value));
-                }}
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="number"
-              />
-            </div>
-            <p className="text-xs text-red-400 mt-1 ml-32">{dorsalError}</p>
-            <div className="flex">
-              <label className="text-black text-sm mr-24">País</label>
-              <CountrySelector
-              containerClassName="flex w-full items-center gap-2 "
-                className="w-1/2 bg-gray-200 rounded"
-                value={country2}
-                setValue={setCountry2}
-              ></CountrySelector>
-              <p className="text-xs text-red-400 mt-1">{countryError2}</p>
-            </div>
+                  <div>
+                    <label className="text-black text-sm">Fundación</label>
+                    <input
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                      type="date"
+                      onChange={(e) => setFounded(e.target.value)}
+                      value={founded}
+                    />
+                    <p className="text-xs text-red-400 mt-1">{foundedError}</p>
+                  </div>
 
-            <div className="flex">
-              <label className="text-black text-sm mr-17">Posición</label>
+                  <div>
+                    <label className="text-black text-sm">Categoria</label>
+                    <input
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                      type="number"
+                      onChange={(e) => setCategory(Number(e.target.value))}
+                      value={category}
+                    />
+                  </div>
+                </div>
 
-              <select
-                className="rounded-2xl"
-                name="selectPosition"
-                id="position"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
+                <div
+                  className={`text-sm ${
+                    response.includes("Error")
+                      ? "text-red-400"
+                      : "text-blue-300"
+                  }`}
+                >
+                  {response}
+                </div>
+              </div>
+              <button
+                onClick={updateTeamF}
+                className="w-1/2 mb-7 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
               >
-                <option value="Delantero">Delantero</option>
-                <option value="Medio">Mediocampista</option>
-                <option value="Defensa">Defensa</option>
-                <option value="Arquero">Arquero</option>
-              </select>
-            </div>
-            <div className="flex">
-              <label className="text-black text-sm mr-12">Nacimiento</label>
-              <input
-                value={birthYear}
-                onChange={(e) => {
-                  setBirthYear(e.target.value);
-                  setAge(
-                    String(
-                      new Date().getFullYear() -
-                        new Date(e.target.value).getFullYear(),
-                    ),
-                  );
-                }}
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="date"
-              />
-            </div>
-            <p className="text-xs text-red-400 mt-1 ml-32">{birthYearError}</p>
+                Actualizar Equipo
+              </button>
+            </>
+          )}
 
-            <div className="flex">
-              <label className="text-black text-sm mr-21">Edad</label>
-              <input
-                value={age}
-                readOnly
-                className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
-                type="number"
+          {!user.team?.includes(teamId!) && user.rol !== "Admin" && (
+            <>
+              <div className="flex flex-col justify-center items-center bg-white p-5 rounded-2xl">
+                <input
+                  className="w-1/2 ml-2 mb-3 mt-2 p-2 bg-gray-200 rounded text-center"
+                  type="text"
+                  readOnly
+                  value={teamName}
+                />
+                <p className="text-xs text-red-400 mt-1">{teamNameError}</p>
+                <Image
+                  className="mb-5 rounded-full border-2 border-black"
+                  src={image !== null ? image : default_escudo}
+                  alt="Escudo de equipo de futbol"
+                  width={100}
+                  height={100}
+                ></Image>
+              </div>
+
+              <div className="p-5 bg-white w-full max-w-3xl rounded-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-black text-sm">País</label>
+                    <CountrySelector
+                      readOnly
+                      value={country}
+                      setValue={setCountry}
+                    ></CountrySelector>
+                    <p className="text-xs text-red-400 mt-1">{countryError}</p>
+                  </div>
+
+                  <div>
+                    <label className="text-black text-sm">Edicion</label>
+
+                    <input
+                      readOnly
+                      type="text"
+                      value={edition}
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-black text-sm">Fundación</label>
+                    <input
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                      type="date"
+                      readOnly
+                      value={founded}
+                    />
+                    <p className="text-xs text-red-400 mt-1">{foundedError}</p>
+                  </div>
+
+                  <div>
+                    <label className="text-black text-sm">Categoria</label>
+                    <input
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                      type="number"
+                      readOnly
+                      value={category}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={`text-sm ${
+                    response.includes("Error")
+                      ? "text-red-400"
+                      : "text-blue-300"
+                  }`}
+                >
+                  {response}
+                </div>
+              </div>
+            </>
+          )}
+
+          <h1 className="font-bold text-lg">Entrenadores</h1>
+          <div className="flex mt-10 mb-10">
+            {coachs.length > 0 ? (
+              <PaginatorCM
+                array={coachs}
+                tipo={"Entrenador"}
+                id={teamId!}
+                labels={["Image", "Nombre", "ID"]}
+                CardItem={CardCM}
+                setRefresh={setRefresh}
+                refresh={refresh}
+                access={user.team?.includes(teamId!) && user.rol == "Admin"}
               />
-            </div>
-            <div
-              className={`mt-2 ml-32 text-sm ${
-                response4.includes("Error") ? "text-red-400" : "text-blue-300"
-              }`}
-            >
-              {response4}
-            </div>
-            <button
-              onClick={createPlayerF}
-              className="w-1/2 mt-0 ml-30 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
-            >
-              Agregar
-            </button>
+            ) : (
+              "No hay coaches agregados aún"
+            )}
           </div>
+          {(user.team?.includes(teamId!) || user.rol == "Admin") && (
+            <div
+              className="flex text-sm text-blue-500 cursor-pointer items-center"
+              onClick={openModal}
+            >
+              <div className="text-5xl font-bold text-blue-500 mr-2 ">+</div>{" "}
+              Agregar Entrenador
+            </div>
+          )}
+
+          <h1 className="font-bold text-lg mt-10">Jugadores</h1>
+          <div className="flex mt-10 mb-10">
+            {players.length > 0 ? (
+              <PaginatorCM
+                array={players}
+                tipo={"Player"}
+                id={teamId!}
+                labels={["Image", "Nombre", "ID"]}
+                CardItem={CardCM}
+                setRefresh={setRefresh}
+                access={false}
+                refresh={refresh}
+              />
+            ) : (
+              "No hay jugadores agregados aún"
+            )}
+          </div>
+          {(user.team?.includes(teamId!) || user.rol == "Admin") && (
+            <div
+              className="flex text-sm text-blue-500 cursor-pointer items-center"
+              onClick={openModal3}
+            >
+              <div className="text-5xl font-bold text-blue-500 mr-2 ">+</div>{" "}
+              Agregar Jugador
+            </div>
+          )}
+
+          {team.editedBy && (
+            <p className="text-sm mt-10">
+              Editado por ultima vez por: {team.editedBy}
+            </p>
+          )}
+          {team.editedBy && (
+            <p className="text-sm">
+              Editado por ultima vez el: {team.editedAt}
+            </p>
+          )}
         </div>
-      </Modal>
-    </>
-  );
+        {/* Primer modal para agregar entrenador */}
+        <Modal isOpen={isOpen} onClose={closeModal}>
+          <div className="flex">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="ml-40">Agregar Entrenador</div>
+              <div className="flex">
+                <label className="text-black text-sm mr-2">
+                  Nombre completo
+                </label>
+                <input
+                  value={name}
+                  onChange={(e) => {
+                    return setName(e.target.value);
+                  }}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="text"
+                />
+              </div>
+              <p className="text-xs text-red-400 mt-1 ml-32">{nameError}</p>
+              <div className="flex">
+                <label className="text-black text-sm mr-9">
+                  Identificación
+                </label>
+                <input
+                  value={id}
+                  onChange={(e) => {
+                    return setId(e.target.value);
+                  }}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="text"
+                />
+              </div>
+              <p className="text-xs text-red-400 mt-1 ml-32">{idError}</p>
+              <div className="flex">
+                <label className="text-black text-sm mr-17">Imagen</label>
+                <input
+                  className="w-1/2 mt-1 p-1 bg-gray-200 rounded"
+                  type="file"
+                  onChange={(e) => setImage2(e.target.files![0])}
+                />
+              </div>
+              <div
+                className={`mt-2 ml-32 text-sm ${
+                  response2.includes("Error") ? "text-red-400" : "text-blue-300"
+                }`}
+              >
+                {response2}
+              </div>
+              <button
+                onClick={addTheCoach}
+                className="w-1/2 mt-1 ml-30 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* 2do modal para agregar player */}
+
+        <Modal isOpen={isOpen3} onClose={closeModal3}>
+          <div className="flex flex-col">
+            <div className="ml-40">Agregar jugador</div>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex">
+                <label className="text-black text-sm mr-2">
+                  Nombre completo
+                </label>
+                <input
+                  value={name3}
+                  onChange={(e) => {
+                    return setName3(e.target.value);
+                  }}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="text"
+                />
+              </div>
+              <p className="text-xs text-red-400 mt-1 ml-32">{nameError3}</p>
+              <div className="flex">
+                <label className="text-black text-sm mr-9">
+                  Identificación
+                </label>
+                <input
+                  value={id3}
+                  onChange={(e) => {
+                    return setId3(e.target.value);
+                  }}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="text"
+                />
+              </div>
+              <p className="text-xs text-red-400 mt-1 ml-32">{idError3}</p>
+              <div className="flex">
+                <label className="text-black text-sm mr-17">Imagen</label>
+                <input
+                  className="w-1/2 mt-1 p-1 bg-gray-200 rounded"
+                  type="file"
+                  onChange={(e) => setImage4(e.target.files![0])}
+                />
+              </div>
+              <div className="flex">
+                <label className="text-black text-sm mr-19">Dorsal</label>
+                <input
+                  value={dorsal}
+                  onChange={(e) => {
+                    return setDorsal(Number(e.target.value));
+                  }}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="number"
+                />
+              </div>
+              <p className="text-xs text-red-400 mt-1 ml-32">{dorsalError}</p>
+              <div className="flex">
+                <label className="text-black text-sm mr-24">País</label>
+                <CountrySelector
+                  readOnly={false}
+                  containerClassName="flex w-full items-center gap-2 "
+                  className="w-1/2 bg-gray-200 rounded"
+                  value={country2}
+                  setValue={setCountry2}
+                ></CountrySelector>
+                <p className="text-xs text-red-400 mt-1">{countryError2}</p>
+              </div>
+
+              <div className="flex">
+                <label className="text-black text-sm mr-17">Posición</label>
+
+                <select
+                  className="rounded-2xl"
+                  name="selectPosition"
+                  id="position"
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                >
+                  <option value="Delantero">Delantero</option>
+                  <option value="Medio">Mediocampista</option>
+                  <option value="Defensa">Defensa</option>
+                  <option value="Arquero">Arquero</option>
+                </select>
+              </div>
+              <div className="flex">
+                <label className="text-black text-sm mr-12">Nacimiento</label>
+                <input
+                  value={birthYear}
+                  onChange={(e) => {
+                    setBirthYear(e.target.value);
+                    setAge(
+                      String(
+                        new Date().getFullYear() -
+                          new Date(e.target.value).getFullYear(),
+                      ),
+                    );
+                  }}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="date"
+                />
+              </div>
+              <p className="text-xs text-red-400 mt-1 ml-32">
+                {birthYearError}
+              </p>
+
+              <div className="flex">
+                <label className="text-black text-sm mr-21">Edad</label>
+                <input
+                  value={age}
+                  readOnly
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="number"
+                />
+              </div>
+              <div className="flex">
+                <label className="text-black text-sm mr-21">Talla</label>
+                <input
+                  value={talla}
+                  onChange={(e) => setTalla(e.target.value)}
+                  className="w-1/2 mt-1 p-2 bg-gray-200 rounded"
+                  type="text"
+                />
+              </div>
+              <div
+                className={`mt-2 ml-32 text-sm ${
+                  response4.includes("Error") ? "text-red-400" : "text-blue-300"
+                }`}
+              >
+                {response4}
+              </div>
+              <button
+                onClick={createPlayerF}
+                className="w-1/2 mt-0 ml-30 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </>
+    );
+  }
 }

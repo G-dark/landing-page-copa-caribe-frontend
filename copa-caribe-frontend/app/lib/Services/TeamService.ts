@@ -1,5 +1,5 @@
 import { UrlAPI } from "./SignedPeopleService";
-
+import { fromJSONToQueryParams } from "./SignedPeopleService";
 export const getTeamByID = async (id: string) => {
   try {
     const team = await fetch(UrlAPI + "/team/" + id);
@@ -9,6 +9,15 @@ export const getTeamByID = async (id: string) => {
   }
 };
 
+export const getTeamByQuery = async (query: any) => {
+
+  try {
+    const team = await fetch(UrlAPI + "/teams/query/" + fromJSONToQueryParams(query));
+    return team;
+  } catch (error) {
+    return Response.json({ error: "Error al obtener el equipo" });
+  }
+};
 export const createTeam = async (
   team: any,
   token: string,
@@ -100,70 +109,5 @@ export const updateCoach = async (
     return updated;
   } catch (error) {
     return Response.json({ error: "Error al actualizar el entrenador" });
-  }
-};
-export const addManager = async (
-  teamID: string,
-  token: string,
-  manager: any,
-  username: string,
-) => {
-  try {
-    const added = await fetch(
-      UrlAPI + "/team/makeManager/" + teamID + "/" + username,
-      {
-        headers: { Authorization: "Bearer " + token },
-        body: manager,
-        method: "PATCH",
-      },
-    );
-    return added;
-  } catch (error) {
-    return Response.json({ error: "Error al agregar el manager" });
-  }
-};
-export const deleteManager = async (
-  teamID: string,
-  token: string,
-  managerID: string,
-  username: string,
-) => {
-  try {
-    const deleted = await fetch(
-      UrlAPI +
-        "/team/deleteManager/" +
-        teamID +
-        "/" +
-        managerID +
-        "/" +
-        username,
-      {
-        headers: { Authorization: "Bearer " + token },
-        method: "PATCH",
-      },
-    );
-    return deleted;
-  } catch (error) {
-    return Response.json({ error: "Error al eliminar el manager" });
-  }
-};
-export const updateManager = async (
-  teamID: string,
-  token: string,
-  manager: any,
-  managerID: string,
-) => {
-  try {
-    const updated = await fetch(
-      UrlAPI + "/team/updateManager/" + teamID + "/" + managerID,
-      {
-        headers: { Authorization: "Bearer " + token },
-        body: manager,
-        method: "PATCH",
-      },
-    );
-    return updated;
-  } catch (error) {
-    return Response.json({ error: "Error al actualizar el manager" });
   }
 };
