@@ -1,4 +1,4 @@
-export const UrlAPI = "http://copacaribe.railway.internal:3000/API";
+export const UrlAPI = "https://copacaribe.railway.internal:3000/API";
 
 // dev mode
 
