@@ -1,4 +1,8 @@
-export const UrlAPI = "http://localhost:0509/API";
+export const UrlAPI = "https://landing-page-copa-caribe-backend.railway.internal/API";
+
+// dev mode
+
+// export const UrlAPI = "http://localhost:0509/API";
 
 /**
  * @param id
