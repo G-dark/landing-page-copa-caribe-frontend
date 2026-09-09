@@ -5,7 +5,6 @@ import { createContext, useContext } from "react";
 type HomeContextType = {
   isActive: boolean;
   setActive: (value: boolean) => void;
-  year: number;
   islogged: boolean;
   setLogged: (value: boolean) => void;
   show: boolean;
