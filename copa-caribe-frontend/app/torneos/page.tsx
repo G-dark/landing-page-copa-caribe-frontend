@@ -7,7 +7,6 @@ import { getTournamentByQuery } from "../lib/Services/TournamentService";
 import Paginator from "../ui/Paginator";
 import CardTournament from "../ui/CardTournament";
 export default function Torneos() {
-  const { year } = useHome();
   const [edition, setEdition] = useState("");
   const [fechaInicio, setFechaInicio] = useState("");
   const [category, setCategory] = useState("");
@@ -63,9 +62,15 @@ export default function Torneos() {
               name="selectEdition"
               id="edition"
             >
-              <option value={year.toString()}>{year}</option>
-              <option value={(year + 1).toString()}>{year + 1}</option>
-              <option value={(year + 2).toString()}>{year + 2}</option>
+              <option value={new Date().getFullYear().toString()}>
+                {new Date().getFullYear()}
+              </option>
+              <option value={(new Date().getFullYear() + 1).toString()}>
+                {new Date().getFullYear() + 1}
+              </option>
+              <option value={(new Date().getFullYear() + 2).toString()}>
+                {new Date().getFullYear() + 2}
+              </option>
             </select>
           </div>
           <div className="flex flex-col mt-10 ml-5">
