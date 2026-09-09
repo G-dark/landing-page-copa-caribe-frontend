@@ -22,22 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isActive, setActive] = useState(false);
-  const [year, setYear] = useState(0);
   const [islogged, setLogged] = useState(false);
   const [show, setShow] = useState(true);
   const [rol, setRol] = useState("");
   const device = useDeviceType();
-  // obtener el año
-  useEffect(() => {
-    const time = new Date();
-    setYear(time.getFullYear());
-  }, []);
   return (
     <HomeContext.Provider
       value={{
         isActive,
         setActive,
-        year,
         islogged,
         setLogged,
         show,
