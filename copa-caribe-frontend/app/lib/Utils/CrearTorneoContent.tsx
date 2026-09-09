@@ -15,11 +15,10 @@ export default function CrearTorneoContent() {
   const parent = searchParams.get("parent");
   const isParentText = searchParams.get("isParent");
   const isParent = isParentText == "true" ? true : false;
-  const { year } = useHome();
   // declare states for variables
-  const [edition, setEdition] = useState(year.toString());
+  const [edition, setEdition] = useState(new Date().getFullYear().toString());
   const [name, setName] = useState("");
-  const [category, setCategory] = useState(year.toString());
+  const [category, setCategory] = useState(new Date().getFullYear().toString());
   const [department, setDeparment] = useState("Atlántico");
   const [city, setCity] = useState("");
   const [startDate, setStart] = useState("");
@@ -51,13 +50,13 @@ export default function CrearTorneoContent() {
 
   const handleEditionChange = (e: any) => {
     if (e.target.value == "1") {
-      setEdition(year.toString());
+      setEdition(new Date().getFullYear().toString());
     }
     if (e.target.value == "2") {
-      setEdition((Number(year) + 1).toString());
+      setEdition((Number(new Date().getFullYear()) + 1).toString());
     }
     if (e.target.value == "3") {
-      setEdition((Number(year) + 2).toString());
+      setEdition((Number(new Date().getFullYear()) + 2).toString());
     }
   };
 
@@ -315,9 +314,9 @@ export default function CrearTorneoContent() {
               onChange={handleEditionChange}
               className="w-full mt-1 p-2 bg-gray-200 rounded"
             >
-              <option value="1">{year}</option>
-              <option value="2">{Number(year + 1)}</option>
-              <option value="3">{Number(year + 2)}</option>
+              <option value="1">{new Date().getFullYear()}</option>
+              <option value="2">{Number(new Date().getFullYear()) + 1}</option>
+              <option value="3">{Number(new Date().getFullYear()) + 2}</option>
             </select>
           </div>
           <div className="flex flex-col">

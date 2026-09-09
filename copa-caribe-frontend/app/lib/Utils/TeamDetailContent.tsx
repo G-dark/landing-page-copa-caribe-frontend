@@ -22,7 +22,6 @@ export default function TeamDetailContent() {
   const searchParams = useSearchParams();
   const teamId = searchParams.get("id");
   const router = useRouter();
-  const { year } = useHome();
   // local variables and states
   const [team, setTeam] = useState<any>({});
   const [user, setUser] = useState<any>(
@@ -37,7 +36,7 @@ export default function TeamDetailContent() {
   const [countryError2, setCountryError2] = useState("");
   const [founded, setFounded] = useState("");
   const [foundedError, setFoundedError] = useState("");
-  const [category, setCategory] = useState(year);
+  const [category, setCategory] = useState(new Date().getFullYear());
   const [logo, setLogo] = useState(new File([], ""));
   const [image, setImage] = useState("");
   const [coachs, setCoachs] = useState([]);
@@ -404,13 +403,13 @@ export default function TeamDetailContent() {
       setEdition(edition);
     }
     if (e.target.value == "2") {
-      setEdition(year.toString());
+      setEdition(new Date().getFullYear().toString());
     }
     if (e.target.value == "3") {
-      setEdition((Number(year) + 1).toString());
+      setEdition((Number(new Date().getFullYear()) + 1).toString());
     }
     if (e.target.value == "4") {
-      setEdition((Number(year) + 2).toString());
+      setEdition((Number(new Date().getFullYear()) + 2).toString());
     }
   };
 
@@ -477,9 +476,9 @@ export default function TeamDetailContent() {
                       className="w-full mt-1 p-2 bg-gray-200 rounded"
                     >
                       <option value="1">{edition}</option>
-                      <option value="2">{year}</option>
-                      <option value="3">{Number(year + 1)}</option>
-                      <option value="4">{Number(year + 2)}</option>
+                      <option value="2">{new Date().getFullYear()}</option>
+                      <option value="3">{Number(new Date().getFullYear()) + 1}</option>
+                      <option value="4">{Number(new Date().getFullYear()) + 2}</option>
                     </select>
                   </div>
 
