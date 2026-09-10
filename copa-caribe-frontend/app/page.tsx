@@ -73,7 +73,7 @@ export default function Home() {
           <Image
             className="image-futbol h-auto w-full "
             src={futbol}
-            width={200}
+            width={300}
             alt="Dos jovenes jugando futbol"
           ></Image>
           <div className="absolute inset-0 bg-gradient-to-l from-blue-900/80 via-blue-800/60 to-transparent"></div>
@@ -95,9 +95,8 @@ export default function Home() {
             <br />
             <br />
             <br />
-            <br />
 
-            <p className="text-white pl-150">
+            <p className="text-white ml-5 mr-5 md:pl-150 md:mr-0 text-sm md:text-lg">
               La REGIÓN CARIBE se convertirá en la referencia mundial de futbol
               formativo, celebrando la mayor fiesta del deporte base
               internacional. Copa caribe es un emocionante torneo Infantil anual
@@ -109,22 +108,24 @@ export default function Home() {
         </div>
 
         <div className="intro pr-30 pl-30">
-          <div className="linechar flex p-10">
+          <div className="linechar flex p-10 flex-wrap md:flex-nowrap">
             <div className="char flex flex-col p-5 bg-red-300 m-5 rounded-lg">
               <div className="diana-flecha text-5xl text-center">🎯</div>
               <div className="text-center">Objetivo</div>
               <br />
-              Promover el desarrollo deportivo infantil, la integración regional
-              y los valores del juego limpio, ofreciendo una experiencia única
-              para los pequeños talentos del fútbol.
+              <p className="text-sm">
+                Promover el desarrollo deportivo infantil, la integración
+                regional y los valores del juego limpio, ofreciendo una
+                experiencia única para los pequeños talentos del fútbol.
+              </p>
             </div>
             <div className="char2 flex flex-col p-5 m-5 bg-gray-300 rounded-lg">
               <div className="tuerca text-5xl text-center">⚙️</div>
               <div className="text-center">Formato del torneo</div>
               <br />
 
-              <p>
-                Fase de grupos y rondas eliminatorias. Mínimo de 3 partidos
+              <p className="text-sm">
+                Fase de grupos y rondas eliminatorias. Mínimo de 4 partidos
                 garantizados por equipo. Árbitros capacitados y reglamento
                 adaptado a cada categoría. Premiación especial por categoría:
                 campeón, subcampeón, goleador y mejor jugador.
@@ -135,20 +136,24 @@ export default function Home() {
               <div className="stadium text-5xl text-center">🏟️</div>
               <div className="text-center">Sedes del torneo</div>
               <br />
-              Escenarios deportivos en óptimas condiciones dentro de
-              Barranquilla, con canchas de grama natural y sintética, seguridad,
-              y zonas de hidratación y descanso.
+              <p className="text-sm">
+                Escenarios deportivos en óptimas condiciones dentro de
+                Barranquilla, con canchas de grama natural y sintética,
+                seguridad, y zonas de hidratación y descanso.
+              </p>
             </div>
 
             <div className="char4 flex flex-col p-5 m-5 bg-blue-300 rounded-lg">
               <div className="stadium text-5xl text-center">🥇</div>
               <div className="text-center">Beneficios</div>
               <br />
-              Para los participantes Medallas y trofeos por equipo e
-              individuales. Hidratación durante los partidos. Cobertura
-              audiovisual (fotografía y video). Actividades recreativas y
-              ambiente familiar. Participación en la ceremonia inaugural y
-              clausura
+              <p className="text-sm">
+                Para los participantes Medallas y trofeos por equipo e
+                individuales. Hidratación durante los partidos. Cobertura
+                audiovisual (fotografía y video). Actividades recreativas y
+                ambiente familiar. Participación en la ceremonia inaugural y
+                clausura
+              </p>
             </div>
           </div>
           <div className="font-bold">Versiones</div>
