@@ -18,12 +18,12 @@ export default function NavBar() {
     return (
       <header>
         <nav>
-          <ul className="nav-bar fixed z-50 w-full flex justify-evenly pt-5 pb-5 pl-100  bg-blue-500/70 font-bold rounded-lg">
+          <ul className="nav-bar fixed z-50 w-full flex justify-evenly pt-5 pb-5 pl-100  bg-blue-950 font-bold rounded-lg">
             <li
               className={
                 isActive
-                  ? `strip absolute top-0 left-0 w-14 min-h-screen bg-blue-500/70`
-                  : "strip absolute top-0 left-0 w-14 h-full bg-blue-500 hidden"
+                  ? `strip absolute top-0 left-0 w-14 min-h-screen bg-blue-950/70`
+                  : "strip absolute top-0 left-0 w-14 h-full bg-blue-950 hidden"
               }
             >
               <div
@@ -59,27 +59,27 @@ export default function NavBar() {
             </li>
 
             <li
-              className="buger-button absolute top-4 left-3 text-4xl cursor-pointer"
+              className="buger-button absolute top-4 left-3 text-4xl text-white cursor-pointer"
               onClick={burgerBottonOnClick}
             >
               ☰
             </li>
 
-            <li>
+            <li className="text-white">
               <Link href="/">Home</Link>
             </li>
-            <li>
+            <li className="text-white">
               {" "}
               <Link href="/inscripcion">
                 {rol == "User" ? "Crear Equipos" : "Inscripción"}
               </Link>{" "}
             </li>
 
-            <li>
+            <li className="text-white">
               {" "}
               <Link href="/torneos">Torneos</Link>
             </li>
-            <li>Reglamento</li>
+            <li className="text-white">Reglamento</li>
             <li>
               <Link href="/">
                 <Image
@@ -100,12 +100,12 @@ export default function NavBar() {
     return (
       <header>
         <nav>
-          <ul className="nav-bar fixed z-50 w-full flex justify-evenly pt-5 pb-5  bg-blue-500/70 font-bold rounded-lg">
+          <ul className="nav-bar fixed z-50 w-full flex justify-center pt-5 pb-5  bg-blue-950 rounded-lg px-0">
             <li
               className={
                 isActive
-                  ? `strip absolute top-0 left-0 w-14 min-h-screen bg-blue-500/70`
-                  : "strip absolute top-0 left-0 w-14 h-full bg-blue-500 hidden"
+                  ? `strip absolute top-0 left-0 w-14 min-h-screen bg-blue-950/70`
+                  : "strip absolute top-0 left-0 w-14 h-full bg-blue-950 hidden"
               }
             >
               <div
@@ -141,35 +141,35 @@ export default function NavBar() {
             </li>
 
             <li
-              className="buger-button absolute top-4 left-3 text-4xl cursor-pointer"
+              className="buger-button absolute top-4 left-3 text-4xl text-white cursor-pointer"
               onClick={burgerBottonOnClick}
             >
               ☰
             </li>
 
-            <li>
+            <li className="ml-5 text-sm hover:font-bold text-white">
               <Link href="/">Home</Link>
             </li>
-            <li>
+            <li className="ml-5 text-sm hover:font-bold text-white">
               {" "}
               <Link href="/inscripcion">
                 {rol == "User" ? "Crear Equipos" : "Inscripción"}
               </Link>{" "}
             </li>
 
-            <li>
+            <li className="ml-5 text-sm hover:font-bold text-white">
               {" "}
               <Link href="/torneos">Torneos</Link>
             </li>
-            <li>Reglamento</li>
+            <li className="text-sm ml-5 hover:font-bold text-white ">Reglamento</li>
             <li>
               <Link href="/">
                 <Image
-                  className="image-logo rounded-full p-0 absolute top-2 right-3"
+                  className="image-logo rounded-full p-0 m-0 absolute top-2 right-3"
                   src={copaLogo}
                   alt="Imagen de un escudo, un balón y una palmera"
                   width={40}
-                  height={60}
+                  height={40}
                 ></Image>
               </Link>
             </li>
