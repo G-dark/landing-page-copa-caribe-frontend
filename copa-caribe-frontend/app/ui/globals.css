@@ -79,12 +79,12 @@ body {
 .icon-team:before{
   content: "\e911";
   font-size: 19px;
-  color: black;
+  color: white;
 }
 .icon-login:before{
   content: "\e912";
   font-size: 19px;
-  color: black;
+  color: white;
 }
 .icon-search:before{
   content: "\e90f";

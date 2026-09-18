@@ -4,8 +4,8 @@ import NavBar from "../ui/NavBar";
 import CountrySelector from "../ui/CountrySelector";
 import { createTeam } from "../lib/Services/TeamService";
 import { useRouter } from "next/navigation";
+import { getUser } from "../lib/Services/UserService";
 export default function crearEquipo() {
-
   const router = useRouter();
   const [teamName, setTeamName] = useState("");
   const [teamNameError, setTeamNameError] = useState("");
@@ -38,6 +38,11 @@ export default function crearEquipo() {
       const data = await res.json();
 
       if ("success" in data) {
+        const username = JSON.parse(localStorage.getItem("user")!).username;
+        const token = localStorage.getItem("token");
+        const response = await getUser(username, token!);
+        const user = await response.json();
+        localStorage.setItem("user", JSON.stringify(user));
         setResponse2("Equipo creado");
       } else {
         if (res.status == 401) {
@@ -130,8 +135,12 @@ export default function crearEquipo() {
                 className="w-full mt-1 p-2 bg-gray-200 rounded"
               >
                 <option value="1">{new Date().getFullYear()}</option>
-                <option value="2">{Number(new Date().getFullYear()) + 1}</option>
-                <option value="3">{Number(new Date().getFullYear()) + 2}</option>
+                <option value="2">
+                  {Number(new Date().getFullYear()) + 1}
+                </option>
+                <option value="3">
+                  {Number(new Date().getFullYear()) + 2}
+                </option>
               </select>
             </div>
 

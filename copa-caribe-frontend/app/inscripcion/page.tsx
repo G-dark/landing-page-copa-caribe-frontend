@@ -17,6 +17,7 @@ import { useHome } from "../lib/Contexts/HomeContexts";
 import Card from "../ui/Card";
 import CountrySelector from "../ui/CountrySelector";
 import { createTeam } from "../lib/Services/TeamService";
+import Footer from "../ui/Footer";
 
 export default function inscripcion() {
   const { islogged, rol, device } = useHome();
@@ -43,6 +44,8 @@ export default function inscripcion() {
   const [teamNameError, setTeamNameError] = useState("");
   const [edition, setEdition] = useState(new Date().getFullYear().toString());
   const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [cityError, setCityError] = useState("");
   const [countryError, setCountryError] = useState("");
   const [founded, setFounded] = useState("");
   const [foundedError, setFoundedError] = useState("");
@@ -107,13 +110,14 @@ export default function inscripcion() {
         teamName: team.trim(),
         oneCat: categoryOne,
         multiplesCat: categoryMultiple,
-        cargo
+        cargo,
+        city,
       };
       const created = await createSignedPeople(body);
       const data = await created.json();
 
       if ("success" in data) {
-         await sendEmail(name, email, "Touch");
+        await sendEmail(name, email, "Touch");
         setResponse("Tus datos han sido registrados");
       } else {
         if (
@@ -190,7 +194,9 @@ export default function inscripcion() {
       validate2 = false,
       validate3 = false,
       validate4 = false,
-      validate5 = false;
+      validate5 = false,
+      validate6 = false;
+
     const regExOletters = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     const regExOletters2 = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     const regExOnumbers = /^[0-9]+$/;
@@ -207,6 +213,14 @@ export default function inscripcion() {
         return true;
       }
     };
+    if (city == "") {
+      validate6 = false;
+      setCityError("Ingresa la ciudad a la que representará");
+    } else {
+      validate6 = true;
+      setCityError("");
+    }
+
     if (id == "") {
       validate1 = false;
       setErrorId("Ingresa tu identificación");
@@ -275,7 +289,9 @@ export default function inscripcion() {
       validate4 = true;
       setErrorEmail("");
     }
-    return validate1 && validate2 && validate3 && validate4 && validate5;
+    return (
+      validate1 && validate2 && validate3 && validate4 && validate5 && validate6
+    );
   };
   const handleEditionChange = (e: any) => {
     if (e.target.value == "1") {
@@ -306,14 +322,28 @@ export default function inscripcion() {
             alt="Imagen de dos jovenes disputando un balón"
           ></Image>
           <div className=" absolute inset-0 flex justify-center items-center min-h-screen p-4 mt-30">
-            <div className="w-full max-w-3xl bg-green-700 rounded-xl p-6">
+            <div className="w-full max-w-3xl bg-red-950 rounded-xl p-6">
               <h1 className="font-bold text-3xl text-white">Inscripción</h1>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Equipo */}
+                <div className="md:col-span-2">
+                  <label className="text-white text-sm">
+                    Nombre del equipo
+                  </label>
+                  <input
+                    className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    type="text"
+                    onChange={(e) => setTeam(e.target.value)}
+                    value={team}
+                  />
+                </div>
+
                 {/* Nombres */}
                 <div>
-                  <label className="text-white text-sm">Nombres</label>
+                  <label className="text-white text-sm">
+                    Nombre del delegado
+                  </label>
                   <input
-                  placeholder="Raul Gonzalo"
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
                     onChange={(e) => setName(e.target.value)}
@@ -324,9 +354,10 @@ export default function inscripcion() {
 
                 {/* Apellidos */}
                 <div>
-                  <label className="text-white text-sm">Apellidos</label>
+                  <label className="text-white text-sm">
+                    Apellidos del delegado
+                  </label>
                   <input
-                  placeholder="Rodriguez Pacheco"
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
@@ -335,11 +366,21 @@ export default function inscripcion() {
                   <p className="text-xs text-red-400 mt-1">{errorlastName}</p>
                 </div>
 
+                <div className="md:col-span-1">
+                  <label className="text-white text-sm">Cargo</label>
+                  <input
+                    placeholder="Presidente"
+                    className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    type="text"
+                    onChange={(e) => setCargo(e.target.value)}
+                    value={cargo}
+                  />
+                </div>
+
                 {/* Identificación */}
                 <div>
                   <label className="text-white text-sm">Identificación</label>
                   <input
-                  placeholder="1003456479"
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
                     onChange={(e) => setId(e.target.value)}
@@ -356,33 +397,25 @@ export default function inscripcion() {
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
-                    placeholder="example@example.com"
                   />
                   <p className="text-xs text-red-400 mt-1">{errorEmail}</p>
                 </div>
 
-                {/* Equipo */}
+                {/* ciudad */}
                 <div className="md:col-span-1">
                   <label className="text-white text-sm">
-                    Nombre del equipo
+                    Ciudad a la que representará
                   </label>
-                  <input
-                    className="w-full mt-1 p-2 bg-gray-200 rounded"
-                    type="text"
-                    onChange={(e) => setTeam(e.target.value)}
-                    value={team}
-                  />
-                </div>
-
-                 <div className="md:col-span-1">
-                  <label className="text-white text-sm">Cargo</label>
-                  <input
-                  placeholder="Presidente"
-                    className="w-full mt-1 p-2 bg-gray-200 rounded"
-                    type="text"
-                    onChange={(e) => setCargo(e.target.value)}
-                    value={cargo}
-                  />
+                  <div>
+                    <input
+                      placeholder="Barranquilla"
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                      type="text"
+                      onChange={(e) => setCity(e.target.value)}
+                      value={city}
+                    />
+                  </div>
+                  <p className="text-xs text-red-400 mt-1">{cityError}</p>
                 </div>
 
                 {/* Categorías */}
@@ -437,12 +470,13 @@ export default function inscripcion() {
               {/* Botón */}
               <button
                 onClick={register}
-                className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
+                className="w-full mt-4 bg-blue-950 hover:bg-blue-600 text-white py-2 rounded-lg transition"
               >
                 Enviar
               </button>
             </div>
           </div>
+          <Footer />
         </>
       );
     } else if (device == "mobile" || device == "tablet") {
@@ -452,9 +486,24 @@ export default function inscripcion() {
           <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
             <div className="w-full max-w-3xl bg-green-700 rounded-xl p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Equipo */}
+                <div className="md:col-span-2">
+                  <label className="text-white text-sm">
+                    Nombre del equipo
+                  </label>
+                  <input
+                    className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    type="text"
+                    onChange={(e) => setTeam(e.target.value)}
+                    value={team}
+                  />
+                </div>
+
                 {/* Nombres */}
                 <div>
-                  <label className="text-white text-sm">Nombres</label>
+                  <label className="text-white text-sm">
+                    Nombre del delegado
+                  </label>
                   <input
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
@@ -466,7 +515,9 @@ export default function inscripcion() {
 
                 {/* Apellidos */}
                 <div>
-                  <label className="text-white text-sm">Apellidos</label>
+                  <label className="text-white text-sm">
+                    Apellidos del delegado
+                  </label>
                   <input
                     className="w-full mt-1 p-2 bg-gray-200 rounded"
                     type="text"
@@ -474,6 +525,17 @@ export default function inscripcion() {
                     value={lastName}
                   />
                   <p className="text-xs text-red-400 mt-1">{errorlastName}</p>
+                </div>
+
+                <div className="md:col-span-1">
+                  <label className="text-white text-sm">Cargo</label>
+                  <input
+                    placeholder="Presidente"
+                    className="w-full mt-1 p-2 bg-gray-200 rounded"
+                    type="text"
+                    onChange={(e) => setCargo(e.target.value)}
+                    value={cargo}
+                  />
                 </div>
 
                 {/* Identificación */}
@@ -500,17 +562,21 @@ export default function inscripcion() {
                   <p className="text-xs text-red-400 mt-1">{errorEmail}</p>
                 </div>
 
-                {/* Equipo */}
+                {/* ciudad */}
                 <div className="md:col-span-2">
                   <label className="text-white text-sm">
-                    Nombre del equipo
+                    Ciudad a la que representará
                   </label>
-                  <input
-                    className="w-full mt-1 p-2 bg-gray-200 rounded"
-                    type="text"
-                    onChange={(e) => setTeam(e.target.value)}
-                    value={team}
-                  />
+                  <div className="mt-2">
+                    <input
+                      placeholder="Barranquilla"
+                      className="w-full mt-1 p-2 bg-gray-200 rounded"
+                      type="text"
+                      onChange={(e) => setCity(e.target.value)}
+                      value={city}
+                    />
+                  </div>
+                  <p className="text-xs text-red-400 mt-1">{cityError}</p>
                 </div>
 
                 {/* Categorías */}
@@ -565,12 +631,13 @@ export default function inscripcion() {
               {/* Botón */}
               <button
                 onClick={register}
-                className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
+                className="w-full mt-4 bg-blue-950 hover:bg-blue-600 text-white py-2 rounded-lg transition"
               >
                 Enviar
               </button>
             </div>
           </div>
+          <Footer />
         </>
       );
     }
@@ -611,7 +678,8 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
-                      "Cargo"
+                      "Cargo",
+                      "Ciudad"
                     ]}
                     values={[
                       s.name,
@@ -622,7 +690,8 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
-                      s.cargo
+                      s.cargo,
+                      s.city
                     ]}
                     action="Contactar"
                   />
@@ -662,7 +731,8 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
-                      "Cargo"
+                      "Cargo",
+                      "Ciudad"
                     ]}
                     values={[
                       s.name,
@@ -673,7 +743,8 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
-                      s.cargo
+                      s.cargo,
+                      s.city
                     ]}
                     action="Pasar a pago"
                   />
@@ -714,7 +785,8 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
-                      "Cargo"
+                      "Cargo",
+                      "Ciudad"
                     ]}
                     values={[
                       s.name,
@@ -725,7 +797,8 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
-                      s.cargo
+                      s.cargo,
+                      s.city
                     ]}
                     action="Aceptar"
                   />
@@ -763,7 +836,8 @@ export default function inscripcion() {
                       "Una categoria",
                       "Multiples",
                       "Nombre del equipo",
-                      "Cargo"
+                      "Cargo",
+                      "Ciudad"
                     ]}
                     values={[
                       s.name,
@@ -774,7 +848,8 @@ export default function inscripcion() {
                       s.oneCat ? "Sí" : "No",
                       s.multiplesCat ? "Sí" : "No",
                       s.teamName,
-                      s.cargo
+                      s.cargo,
+                      s.city,
                     ]}
                     action=""
                   />
@@ -782,14 +857,20 @@ export default function inscripcion() {
               })
             : "No hay solicitudes"}
         </div>
+        <Footer />
       </>
     );
   } else if (islogged && rol == "User") {
     return (
       <>
         <NavBar />
-        <div className="flex justify-center items-center mt-10 ml-30 min-h-screen">
-          <div className="p-5 bg-green-700 w-full max-w-3xl rounded-2xl">
+         <Image
+            className="w-full h-auto relative"
+            src={afiche}
+            alt="Imagen de dos jovenes disputando un balón"
+          ></Image>
+        <div className="absolute inset-0 flex justify-center items-center mt-10 ml-30 min-h-screen">
+          <div className="p-5 bg-red-950 w-full max-w-3xl rounded-2xl">
             <div className="text-white font-bold">Creación de equipos</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -821,8 +902,12 @@ export default function inscripcion() {
                   className="w-full mt-1 p-2 bg-gray-200 rounded"
                 >
                   <option value="1">{new Date().getFullYear()}</option>
-                  <option value="2">{Number(new Date().getFullYear()) + 1}</option>
-                  <option value="3">{Number(new Date().getFullYear()) + 2}</option>
+                  <option value="2">
+                    {Number(new Date().getFullYear()) + 1}
+                  </option>
+                  <option value="3">
+                    {Number(new Date().getFullYear()) + 2}
+                  </option>
                 </select>
               </div>
 
@@ -873,6 +958,7 @@ export default function inscripcion() {
             </button>
           </div>
         </div>
+        <Footer />
       </>
     );
   }

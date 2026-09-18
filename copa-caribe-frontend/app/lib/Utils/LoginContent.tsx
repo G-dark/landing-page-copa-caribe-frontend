@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import Popup from "../../ui/Popup";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import Footer from "@/app/ui/Footer";
 
 export default function LoginContent() {
   const { device, setLogged, setRol, setShow } = useHome();
@@ -76,8 +77,8 @@ export default function LoginContent() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
             <div className="absolute inset-0 flex justify-center items-center w-full min-h-screen">
               <div className="absolute top-4/32 text-2xl font-bold text-white">
-                  Renovar Permisos
-                </div>
+                Renovar Permisos
+              </div>
               <div className="border-t-10 border-white w-100 md:w-300 lg:w-1/2"></div>
               <div className="relative flex justify-center items-center w-100 h-100 rounded-full border-10 border-white">
                 <div className="absolute top-6/32 text-sm font-bold text-white">
@@ -119,7 +120,7 @@ export default function LoginContent() {
               <div className="border-t-10 border-white w-100 md:w-300 lg:w-1/2"></div>
             </div>
           </div>
-
+          <Footer />
           <Popup onClose={closePopup} isOpen={isOpenPopup}>
             {responseU}
           </Popup>
@@ -180,7 +181,7 @@ export default function LoginContent() {
               <div className="border-t-10 border-white w-100 md:w-300 lg:w-1/2"></div>
             </div>
           </div>
-
+          <Footer />
           <Popup onClose={closePopup} isOpen={isOpenPopup}>
             {responseU}
           </Popup>
@@ -196,8 +197,8 @@ export default function LoginContent() {
           <NavBar />
           <div className="flex items-center justify-center min-h-screen bg-green-700">
             <div className="absolute top-4/32 text-2xl font-bold text-white">
-                  Renovar Permisos
-                </div>
+              Renovar Permisos
+            </div>
             <div className="flex flex-col items-center justify-center w-80 h-80 rounded-full border-4 border-white bg-green-800 p-6">
               <input
                 type="text"
@@ -226,6 +227,7 @@ export default function LoginContent() {
           <Popup onClose={closePopup} isOpen={isOpenPopup}>
             {responseU}
           </Popup>
+          <Footer />
         </>
       );
     } else {
@@ -261,6 +263,7 @@ export default function LoginContent() {
           <Popup onClose={closePopup} isOpen={isOpenPopup}>
             {responseU}
           </Popup>
+           <Footer/>
         </>
       );
     }
