@@ -113,6 +113,9 @@ export default function MatchDetailContent() {
       let players = [];
       const resTN = await getTournamentByID(match.tournament);
       const tournament = await resTN.json();
+        if (resTN.status == 401) {
+          router.push("/login?refreshToken=" + true);
+        }
       const teamInTN = tournament[0].playersInTournament.find(
         (pit: any) => pit.team == teamsTS[0].id,
       );
@@ -134,6 +137,9 @@ export default function MatchDetailContent() {
     setLoading(true);
     const res = await getMatchByID(matchID!);
     const data = await res.json();
+    if (res.status == 401) {
+          router.push("/login?refreshToken=" + true);
+        }
     setMatch(data[0]);
 
     const resA = await getTeamByID(data[0].teamA);

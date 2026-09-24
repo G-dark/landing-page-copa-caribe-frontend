@@ -71,8 +71,6 @@ export default function Card({
       );
       const data2 = await response2.json();
       if ("success" in data && "success" in data2) {
-        //"success" in data
-
         setResponse("Se ha pasado la información de pago por correo");
       } else {
         setResponse("Error pasando la información de pago");
@@ -109,8 +107,6 @@ export default function Card({
       );
       const data2 = await response2.json();
       if ("success" in data && "success" in data2) {
-        //"success" in data
-
         setResponse("Se ha aceptado y notificado por correo");
       } else {
         setResponse("Error aceptando al candidato");
