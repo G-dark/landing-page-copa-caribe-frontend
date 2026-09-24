@@ -9,12 +9,14 @@ import { getTeamByQuery } from "../../lib/Services/TeamService";
 import MiniCard2 from "../../ui/Minicard2";
 import { createTournament } from "../../lib/Services/TournamentService";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function CrearTorneoContent() {
   const searchParams = useSearchParams();
   const parent = searchParams.get("parent");
   const isParentText = searchParams.get("isParent");
   const isParent = isParentText == "true" ? true : false;
+  const router = useRouter();
   // declare states for variables
   const [edition, setEdition] = useState(new Date().getFullYear().toString());
   const [name, setName] = useState("");
@@ -126,6 +128,9 @@ export default function CrearTorneoContent() {
       if ("success" in data) {
         setMessage("Torneo creado correctamente");
       } else {
+          if (resp.status == 401) {
+          router.push("/login?refreshToken=" + true);
+        }
         setMessage("Error: Un error ha ocurrido");
       }
     } else {

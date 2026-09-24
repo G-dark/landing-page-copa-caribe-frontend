@@ -115,14 +115,13 @@ export default function inscripcion() {
       };
       const created = await createSignedPeople(body);
       const data = await created.json();
-
       if ("success" in data) {
-        await sendEmail(name, email, "Touch");
         setResponse("Tus datos han sido registrados");
+        await sendEmail(name, email, "Touch");
       } else {
         if (
           "error" in data &&
-          data["error"].includes("That user already exists")
+          data["error"].includes("That person already exists")
         ) {
           setResponse("Ya tenemos una solicitud tuya, pronto te contactaremos");
         } else {
@@ -483,8 +482,9 @@ export default function inscripcion() {
       return (
         <>
           <NavBar />
-          <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-            <div className="w-full max-w-3xl bg-green-700 rounded-xl p-6">
+          <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 mt-20">
+            <div className="w-full max-w-3xl bg-red-950 rounded-xl p-6">
+               <h1 className="font-bold text-3xl text-white">Inscripción</h1>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Equipo */}
                 <div className="md:col-span-2">
